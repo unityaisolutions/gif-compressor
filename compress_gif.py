@@ -1,9 +1,10 @@
 import os
 import sys
+
 from PIL import Image
 from rich.console import Console
-from rich.prompt import Prompt, IntPrompt
 from rich.panel import Panel
+from rich.prompt import IntPrompt, Prompt
 from tqdm import tqdm
 
 console = Console()
@@ -17,7 +18,8 @@ def get_file_size(filepath):
 def process_gif():
     console.print(
         Panel.fit(
-            "[bold blue]Advanced Interactive GIF Compressor[/bold blue] \nPowered by Rich, TQDM, and Pillow"
+            "[bold blue]Advanced Interactive GIF Compressor[/bold blue] \n"
+            "Powered by Rich, TQDM, and Pillow"
         )
     )
 
@@ -75,14 +77,12 @@ def process_gif():
 
         total_frames = len(frames)
         console.print(
-            f"Loaded [bold cyan]{total_frames}[/bold cyan] frames. Starting compression...\n"
+            f"Loaded [bold cyan]{total_frames}[/bold cyan] frames. "
+            "Starting compression...\n"
         )
 
         processed_frames = []
 
-        # TQDM progress bar. Because we process frame-by-frame, TQDM automatically
-        # calculates the iterations per second (it/s) and estimates the time remaining
-        # based strictly on how fast your CPU crunches through the loop.
         for frame in tqdm(
             frames, desc="Compressing Frames", unit="frame", dynamic_ncols=True
         ):
@@ -93,11 +93,9 @@ def process_gif():
             if scale_percent < 100:
                 new_width = int(frame.width * (scale_percent / 100))
                 new_height = int(frame.height * (scale_percent / 100))
-                # Using LANCZOS for high-quality downsampling
                 frame = frame.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
             # Quantize (reduce colors)
-            # method=2 corresponds to fast octree color quantization
             frame = frame.convert("P", palette=Image.Palette.ADAPTIVE, colors=colors)
 
             processed_frames.append(frame)
